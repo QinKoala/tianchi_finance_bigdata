@@ -11,13 +11,15 @@ def cleanData(locationOfType, indexOfsheet, nameOfOutput):
     nex_data_row=[]
     last_valid_row=[]
     theType = ''
+    # input data from xls
     for rownum in range(table.nrows):
         data_row.extend(table.row_values(rownum))
         data_rows.append(data_row)
         data_row=[]
+    # map data and clean
     for rownum in range(table.nrows):
         data_row = data_rows[rownum]
-        if rownum == 0:
+        if rownum == 0: # filter header
             continue
         if rownum != table.nrows-1 :
             nex_data_row = data_rows[rownum+1]
@@ -28,6 +30,8 @@ def cleanData(locationOfType, indexOfsheet, nameOfOutput):
                 last_valid_row=data_row
         else :
             if theType != nex_data_row[locationOfType]:
+                if len(last_valid_row) == 0 or data_row[1] != last_valid_row[1]:
+                    continue
                 for colnum in range(table.ncols):
                     if colnum > 8 :
                         if colnum != table.ncols:
@@ -38,6 +42,7 @@ def cleanData(locationOfType, indexOfsheet, nameOfOutput):
                     else:
                         new_data_row.append(data_row[colnum])
                 new_data_rows.append(new_data_row)
+                last_valid_row=data_row
                 new_data_row=[]
     with open(nameOfOutput,"w", encoding='utf8',newline='') as f:
         writer = csv.writer(f)
@@ -48,7 +53,7 @@ cleanData(6, 1, 'cashOfBank.csv')
 cleanData(6, 2, 'cashOfInsurance.csv')
 cleanData(6, 3, 'cashOfSecurity.csv')
 data=xlrd.open_workbook('income.xls')
-cleanData(6, 0, 'cashOfGeneral.csv')
-cleanData(6, 1, 'cashOfBank.csv')
-cleanData(6, 2, 'cashOfInsurance.csv')
-cleanData(6, 3, 'cashOfSecurity.csv')
+cleanData(6, 0, 'incomeOfGeneral.csv')
+cleanData(6, 1, 'incomeOfBank.csv')
+cleanData(6, 2, 'incomeOfInsurance.csv')
+cleanData(6, 3, 'incomeOfSecurity.csv')
