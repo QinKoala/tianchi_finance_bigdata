@@ -20,17 +20,18 @@ def cleanData(locationOfType, indexOfsheet, nameOfOutput):
     for rownum in range(table.nrows):
         data_row = data_rows[rownum]
         if rownum == 0: # filter header
+            new_data_rows.append(data_row)
             continue
         if rownum != table.nrows-1 :
             nex_data_row = data_rows[rownum+1]
         theType = data_row[locationOfType]
         if theType == 'Q1':
-            if theType != nex_data_row[locationOfType]:
+            if theType != nex_data_row[locationOfType] or data_row[0] != nex_data_row[0]:
                 new_data_rows.append(data_row)
                 last_valid_row=data_row
         else :
-            if theType != nex_data_row[locationOfType]:
-                if len(last_valid_row) == 0 or data_row[1] != last_valid_row[1]:
+            if theType != nex_data_row[locationOfType] or data_row[0] != nex_data_row[0]:
+                if len(last_valid_row) == 0 or data_row[0] != last_valid_row[0]:
                     continue
                 for colnum in range(table.ncols):
                     if colnum > 8 :
